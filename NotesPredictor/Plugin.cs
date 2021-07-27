@@ -1,12 +1,6 @@
 ﻿using IPA;
-using IPA.Config;
-using IPA.Config.Stores;
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+using NotesPredictor.Installers;
+using SiraUtil.Zenject;
 using IPALogger = IPA.Logging.Logger;
 
 namespace NotesPredictor
@@ -23,11 +17,12 @@ namespace NotesPredictor
         /// [Init] methods that use a Constructor or called before regular methods like InitWithConfig.
         /// Only use [Init] with one Constructor.
         /// </summary>
-        public void Init(IPALogger logger)
+        public void Init(IPALogger logger, Zenjector zenjector)
         {
             Instance = this;
             Log = logger;
             Log.Info("NotesPredictor initialized.");
+            zenjector.OnGame<NPGameInstaller>().OnlyForStandard();
         }
 
         #region BSIPA Config
@@ -43,18 +38,9 @@ namespace NotesPredictor
         #endregion
 
         [OnStart]
-        public void OnApplicationStart()
-        {
-            Log.Debug("OnApplicationStart");
-            new GameObject("NotesPredictorController").AddComponent<NotesPredictorController>();
-
-        }
+        public void OnApplicationStart() => Log.Debug("OnApplicationStart");//new GameObject("NotesPredictorController").AddComponent<NotesPredictorController>();
 
         [OnExit]
-        public void OnApplicationQuit()
-        {
-            Log.Debug("OnApplicationQuit");
-
-        }
+        public void OnApplicationQuit() => Log.Debug("OnApplicationQuit");
     }
 }
